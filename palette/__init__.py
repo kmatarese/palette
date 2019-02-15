@@ -84,7 +84,7 @@ class Color(object):
             self.rgb8 = hex_to_rgb(descr)
             return
 
-        for k, v in kwargs.iteritems():
+        for k, v in kwargs.items():
             if isinstance(getattr(self, k), ColorSpace):
                 setattr(self, k, v)
                 return
@@ -185,7 +185,7 @@ class Color(object):
 
     @colorspace
     def hls(self):
-        return zip("hls", colorsys.rgb_to_hls(self.rgb.r, self.rgb.g, self.rgb.b))
+        return list(zip("hls", colorsys.rgb_to_hls(self.rgb.r, self.rgb.g, self.rgb.b)))
 
     @hls.setter
     def hls(self, v):
@@ -195,7 +195,7 @@ class Color(object):
     @colorspace
     def hsl(self):
         hls = tuple(self.hls)
-        return zip("hsl", [hls[0], hls[2], hls[1]])
+        return list(zip("hsl", [hls[0], hls[2], hls[1]]))
 
     @hsl.setter
     def hsl(self, v):
@@ -204,8 +204,8 @@ class Color(object):
 
     @colorspace
     def yiq(self):
-        return zip("yiq", colorsys.rgb_to_yiq(
-            self.rgb.r, self.rgb.g, self.rgb.b))
+        return list(zip("yiq", colorsys.rgb_to_yiq(
+            self.rgb.r, self.rgb.g, self.rgb.b)))
 
     @yiq.setter
     def yiq(self, v):
@@ -257,10 +257,10 @@ class ColorSpace(object):
         "Return the euclidean distance between two points."
         other_space = getattr(other, self.name)
         return math.sqrt(sum((v - other_space[k]) ** 2 for
-                             k, v in self.coords.items()))
+                             k, v in list(self.coords.items())))
 
     def l1_distance(self, other):
         "Return the L_1 distance between two points."
         other_space = getattr(other, self.name)
         return sum(abs(v - other_space[k]) for
-                   k, v in self.coords.items())
+                   k, v in list(self.coords.items()))
